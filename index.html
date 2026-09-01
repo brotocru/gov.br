@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu App</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: black;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    .screen {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      display: none;
+      overflow: hidden;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    .background {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .dark-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+    }
+
+    .loading-box {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: white;
+    }
+
+    .spinner {
+      width: 55px;
+      height: 55px;
+      border: 6px solid rgba(255,255,255,0.25);
+      border-top-color: #1976d2;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .click-area {
+      position: absolute;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="screen1" class="screen active">
+    <img src="loading.jpg" class="background">
+
+    <div class="dark-overlay"></div>
+
+    <div class="loading-box">
+      <div class="spinner"></div>
+      <div>Aguarde...</div>
+    </div>
+  </div>
+
+  <div id="screen2" class="screen">
+    <img src="tela2.jpg" class="background">
+
+    <button
+      class="click-area"
+      style="
+        left: 20%;
+        top: 70%;
+        width: 60%;
+        height: 10%;
+      "
+      onclick="goToScreen(3)">
+    </button>
+  </div>
+
+  <div id="screen3" class="screen">
+    <img src="tela3.jpg" class="background">
+
+    <button
+      class="click-area"
+      style="
+        left: 20%;
+        top: 70%;
+        width: 60%;
+        height: 10%;
+      "
+      onclick="goToScreen(4)">
+    </button>
+  </div>
+
+  <div id="screen4" class="screen">
+    <img src="tela4.jpg" class="background">
+  </div>
+
+  <script>
+    setTimeout(() => {
+      goToScreen(2);
+    }, 3000);
+
+    function goToScreen(number) {
+      document.querySelectorAll(".screen").forEach(screen => {
+        screen.classList.remove("active");
+      });
+
+      document
+        .getElementById("screen" + number)
+        .classList.add("active");
+    }
+  </script>
+
+</body>
+</html>
