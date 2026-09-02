@@ -453,30 +453,39 @@
     /* TRANSIÇÃO ENTRE TELAS */
 
 .slide-out-left {
-  animation: slideOutLeft 0.35s ease-in-out forwards;
+  animation: slideOutLeft 0.32s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  will-change: transform;
+  backface-visibility: hidden;
 }
-
 .slide-in-right {
-  animation: slideInRight 0.35s ease-in-out forwards;
+  animation: slideInRight 0.32s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+
+  /* cobre qualquer frestinha entre as telas */
+  box-shadow: -4px 0 0 white;
+
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 @keyframes slideOutLeft {
   from {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
 
   to {
-    transform: translateX(-100%);
+    transform: translate3d(-100%, 0, 0);
   }
 }
 
+
 @keyframes slideInRight {
   from {
-    transform: translateX(100%);
+    /* 99.5% em vez de 100% cria uma pequena sobreposição */
+    transform: translate3d(99.5%, 0, 0);
   }
 
   to {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
 }
   </style>
@@ -748,14 +757,15 @@ function slideToScreen(currentNumber, nextNumber) {
   const nextScreen =
     document.getElementById("screen" + nextNumber);
 
+  if (!currentScreen || !nextScreen) return;
 
-  /* mostra a próxima tela */
+  currentScreen.style.zIndex = "1";
+  nextScreen.style.zIndex = "2";
+
   nextScreen.classList.add("active");
 
-  /* anima as duas */
   currentScreen.classList.add("slide-out-left");
   nextScreen.classList.add("slide-in-right");
-
 
   setTimeout(function() {
 
@@ -768,7 +778,10 @@ function slideToScreen(currentNumber, nextNumber) {
       "slide-in-right"
     );
 
-  }, 350);
+    currentScreen.style.zIndex = "";
+    nextScreen.style.zIndex = "";
+
+  }, 320);
 
 }
 </script>
