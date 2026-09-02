@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="black-translucent"
+  >
+
+  <title>App</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .screen {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100dvh;
+      display: none;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    .background-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* LOADING */
+
+    .loading-overlay {
+     position: absolute;
+  inset: 0;
+
+  /* mais escuro */
+  background: rgba(0, 0, 0, 0.68);
+
+  z-index: 2;
+}
+
+    .loading-content {
+  position: absolute;
+
+  left: 50%;
+  top: 52%;
+
+  transform: translate(-50%, -50%);
+
+  z-index: 3;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+    .spinner {
+  width: 30px;
+  height: 30px;
+
+  border: 2.5px solid transparent;
+  border-top-color: #1769d2;
+
+  border-radius: 50%;
+
+  animation: spin 0.8s linear infinite;
+}
+
+    .loading-text {
+  color: white;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  margin-top: 4px;
+}
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* BOTÕES INVISÍVEIS */
+
+    .click-area {
+      position: absolute;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      z-index: 10;
+      cursor: pointer;
+    }
+
+    /*
+      TELA 2
+      AJUSTE ESTES VALORES DEPOIS,
+      se necessário.
+    */
+   #screen2 {
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+#screen2.active {
+  display: flex;
+}
+
+.phone-screen {
+  position: relative;
+
+  width: min(100vw, calc(100dvh * 0.461));
+  height: min(100dvh, calc(100vw / 0.461));
+}
+
+.phone-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+#button-screen2 {
+  position: absolute;
+
+  left: 60%;
+  top: 88%;
+
+  width: 22%;
+  height: 10%;
+
+  background: rgba(255, 0, 0, 0.45);
+  border: 2px solid red;
+
+  z-index: 999;
+}
+  position: absolute;
+
+  left: 63%;
+  top: 89%;
+
+  width: 16%;
+  height: 8%;
+
+  background: transparent;
+  border: none;
+
+  z-index: 20;
+}
+
+    /*
+      TELA 3
+      AJUSTE ESTES VALORES DEPOIS,
+      se necessário.
+    */
+    #button-screen3 {
+      left: 10%;
+      top: 60%;
+      width: 80%;
+      height: 15%;
+    }
+
+    /* CARROSSEL FINAL */
+
+    .slider {
+      width: 100%;
+      height: 100%;
+
+      display: flex;
+
+      overflow-x: auto;
+      overflow-y: hidden;
+
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+
+      scrollbar-width: none;
+    }
+
+    .slider::-webkit-scrollbar {
+      display: none;
+    }
+
+    .slide {
+      position: relative;
+
+      flex: 0 0 100%;
+      width: 100%;
+      height: 100%;
+
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: #000;
+    }
+
+    .slide img {
+      width: 100%;
+      height: 100%;
+
+      object-fit: contain;
+      object-position: center;
+
+      display: block;
+      user-select: none;
+      -webkit-user-select: none;
+      pointer-events: none;
+    }
+
+    /* BOLINHAS DO CARROSSEL */
+
+    .dots {
+      position: absolute;
+
+      left: 50%;
+      bottom: calc(18px + env(safe-area-inset-bottom));
+
+      transform: translateX(-50%);
+
+      display: flex;
+      gap: 8px;
+
+      z-index: 20;
+
+      padding: 7px 10px;
+
+      border-radius: 20px;
+
+      background: rgba(0, 0, 0, 0.25);
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+
+      background: rgba(255, 255, 255, 0.45);
+
+      transition: 0.2s;
+    }
+
+    .dot.active {
+      background: white;
+      transform: scale(1.25);
+    }
+ /* ==========================
+   TELA 4 - PROTÓTIPO
+========================== */
+
+#screen4 {
+  background: black;
+}
+
+.doc-page {
+  position: relative;
+
+  height: 100dvh;
+  aspect-ratio: 0.461 / 1;
+  max-width: 100vw;
+
+  margin: 0 auto;
+
+  background: white;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+}
+
+
+/* CABEÇALHO FIXO */
+
+.doc-header {
+  height: 8%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 6%;
+
+  background: white;
+
+  flex-shrink: 0;
+}
+
+.doc-brand {
+  font-size: 14px;
+  font-weight: bold;
+
+  color: #1351b4;
+}
+
+.doc-close {
+  font-size: 32px;
+
+  color: #1351b4;
+}
+
+
+/* TÍTULO FIXO */
+
+.doc-title {
+  text-align: center;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  padding: 8px;
+
+  background: white;
+
+  flex-shrink: 0;
+}
+
+
+/* SOMENTE ESTA PARTE DESLIZA */
+
+.document-slider {
+  flex: 1;
+
+  width: 100%;
+
+  display: flex;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  scroll-snap-type: x mandatory;
+
+  -webkit-overflow-scrolling: touch;
+
+  scrollbar-width: none;
+}
+
+.document-slider::-webkit-scrollbar {
+  display: none;
+}
+
+
+.document-slide {
+  flex: 0 0 100%;
+
+  width: 100%;
+  height: 100%;
+
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 3%;
+
+  background: white;
+}
+
+
+.document-slide img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  display: block;
+
+  pointer-events: none;
+
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+
+/* PARTE DE BAIXO FIXA */
+
+.doc-bottom {
+  height: 8%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: white;
+
+  flex-shrink: 0;
+}
+
+
+/* BOLINHAS */
+
+.doc-dots {
+  display: flex;
+
+  gap: 8px;
+}
+
+.doc-dot {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #a0a0a0;
+}
+
+.doc-dot.active {
+  background: #1351b4;
+}
+    /* TRANSIÇÃO ENTRE TELAS */
+
+.slide-out-left {
+  animation: slideOutLeft 0.35s ease-in-out forwards;
+}
+
+.slide-in-right {
+  animation: slideInRight 0.35s ease-in-out forwards;
+}
+
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+  </style>
+</head>
+
+<body>
+
+  <!-- TELA 1 - LOADING -->
+
+  <div id="screen1" class="screen active">
+    <img
+      src="loading.jpg"
+      class="background-image"
+      alt=""
+    >
+
+    <div class="loading-overlay"></div>
+
+    <div class="loading-content">
+      <div class="spinner"></div>
+
+      <div class="loading-text">
+        Aguarde...
+      </div>
+    </div>
+  </div>
+
+<!-- TELA 2 -->
+
+<div id="screen2" class="screen">
+
+  <div style="
+    position: relative;
+    height: 100dvh;
+    aspect-ratio: 0.461 / 1;
+    max-width: 100vw;
+    margin: 0 auto;
+  ">
+
+    <img
+      src="tela2.jpg"
+      alt=""
+      style="
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+      "
+    >
+
+    <!-- BOTÃO CARTEIRA -->
+    <button
+    onclick="slideToScreen(2, 3)"
+      aria-label="Carteira"
+      style="
+        position: absolute;
+        left: 62%;
+        top: 89%;
+        width: 18%;
+        height: 8%;
+       background: transparent;
+border: none;
+        z-index: 9999;
+      "
+    ></button>
+
+  </div>
+
+</div>
+
+  <!-- TELA 3 -->
+
+<div id="screen3" class="screen">
+
+  <div style="
+    position: relative;
+    height: 100dvh;
+    aspect-ratio: 0.461 / 1;
+    max-width: 100vw;
+    margin: 0 auto;
+  ">
+
+    <img
+      src="tela3.jpg"
+      alt=""
+      style="
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+      "
+    >
+
+    <!-- BOTÃO DA TELA 3 -->
+<div
+  onclick="goToScreen(4)"
+  style="
+    position: absolute;
+    left: 6%;
+    top: 25.5%;
+    width: 88%;
+    height: 23%;
+ background: transparent;
+border: none;
+    z-index: 99999;
+    cursor: pointer;
+  "
+></div>
+
+  </div>
+
+</div>
+
+ <!-- TELA 4 - PROTÓTIPO -->
+
+<div id="screen4" class="screen">
+
+  <div class="doc-page">
+
+    <div class="doc-header">
+      <span class="doc-brand">PROTÓTIPO / NÃO OFICIAL</span>
+      <span class="doc-close">×</span>
+    </div>
+
+    <div class="doc-title">
+      DOCUMENTO DE IDENTIFICAÇÃO
+    </div>
+
+    <div id="documentSlider" class="document-slider">
+
+      <div class="document-slide">
+        <img src="final1.jpg" alt="">
+      </div>
+
+      <div class="document-slide">
+        <img src="final2.jpg" alt="">
+      </div>
+
+      <div class="document-slide">
+        <img src="final3.jpg" alt="">
+      </div>
+
+      <div class="document-slide">
+        <img src="final4.jpg" alt="">
+      </div>
+
+    </div>
+
+    <div class="doc-bottom">
+
+      <div class="doc-dots">
+        <span class="doc-dot active"></span>
+        <span class="doc-dot"></span>
+        <span class="doc-dot"></span>
+        <span class="doc-dot"></span>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+<script>
+
+  /* =========================
+     TROCAR DE TELA
+  ========================= */
+
+  function goToScreen(number) {
+
+    document.querySelectorAll(".screen").forEach(function(screen) {
+      screen.classList.remove("active");
+    });
+
+    const nextScreen =
+      document.getElementById("screen" + number);
+
+    if (nextScreen) {
+      nextScreen.classList.add("active");
+    }
+
+    /* Quando entrar na Tela 4,
+       começa sempre no primeiro documento */
+    if (number === 4) {
+
+      const documentSlider =
+        document.getElementById("documentSlider");
+
+      if (documentSlider) {
+        documentSlider.scrollLeft = 0;
+      }
+
+      updateDocumentDots(0);
+    }
+  }
+
+
+  /* =========================
+     LOADING - 6 SEGUNDOS
+  ========================= */
+
+  function startApp() {
+
+    goToScreen(1);
+
+    setTimeout(function() {
+      goToScreen(2);
+    }, 5000);
+
+  }
+
+  window.addEventListener("load", startApp);
+
+
+  /* =========================
+     CARROSSEL DA TELA 4
+  ========================= */
+
+  const documentSlider =
+    document.getElementById("documentSlider");
+
+
+  if (documentSlider) {
+
+    documentSlider.addEventListener(
+      "scroll",
+      function() {
+
+        const pageWidth =
+          documentSlider.clientWidth;
+
+        const page =
+          Math.round(
+            documentSlider.scrollLeft /
+            pageWidth
+          );
+
+        updateDocumentDots(page);
+
+      }
+    );
+
+  }
+
+
+  /* =========================
+     ATUALIZAR AS BOLINHAS
+  ========================= */
+
+  function updateDocumentDots(index) {
+
+    const dots =
+      document.querySelectorAll(".doc-dot");
+
+    dots.forEach(function(dot) {
+      dot.classList.remove("active");
+    });
+
+    if (dots[index]) {
+      dots[index].classList.add("active");
+    }
+
+  }
+function slideToScreen(currentNumber, nextNumber) {
+
+  const currentScreen =
+    document.getElementById("screen" + currentNumber);
+
+  const nextScreen =
+    document.getElementById("screen" + nextNumber);
+
+
+  /* mostra a próxima tela */
+  nextScreen.classList.add("active");
+
+  /* anima as duas */
+  currentScreen.classList.add("slide-out-left");
+  nextScreen.classList.add("slide-in-right");
+
+
+  setTimeout(function() {
+
+    currentScreen.classList.remove(
+      "active",
+      "slide-out-left"
+    );
+
+    nextScreen.classList.remove(
+      "slide-in-right"
+    );
+
+  }, 350);
+
+}
+</script>
+
+</body>
+</html>
