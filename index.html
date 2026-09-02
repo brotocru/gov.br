@@ -278,6 +278,171 @@
       background: white;
       transform: scale(1.25);
     }
+ /* ==========================
+   TELA 4 - PROTÓTIPO
+========================== */
+
+#screen4 {
+  background: black;
+}
+
+.doc-page {
+  position: relative;
+
+  height: 100dvh;
+  aspect-ratio: 0.461 / 1;
+  max-width: 100vw;
+
+  margin: 0 auto;
+
+  background: white;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+}
+
+
+/* CABEÇALHO FIXO */
+
+.doc-header {
+  height: 8%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 6%;
+
+  background: white;
+
+  flex-shrink: 0;
+}
+
+.doc-brand {
+  font-size: 14px;
+  font-weight: bold;
+
+  color: #1351b4;
+}
+
+.doc-close {
+  font-size: 32px;
+
+  color: #1351b4;
+}
+
+
+/* TÍTULO FIXO */
+
+.doc-title {
+  text-align: center;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  padding: 8px;
+
+  background: white;
+
+  flex-shrink: 0;
+}
+
+
+/* SOMENTE ESTA PARTE DESLIZA */
+
+.document-slider {
+  flex: 1;
+
+  width: 100%;
+
+  display: flex;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  scroll-snap-type: x mandatory;
+
+  -webkit-overflow-scrolling: touch;
+
+  scrollbar-width: none;
+}
+
+.document-slider::-webkit-scrollbar {
+  display: none;
+}
+
+
+.document-slide {
+  flex: 0 0 100%;
+
+  width: 100%;
+  height: 100%;
+
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 3%;
+
+  background: white;
+}
+
+
+.document-slide img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  display: block;
+
+  pointer-events: none;
+
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+
+/* PARTE DE BAIXO FIXA */
+
+.doc-bottom {
+  height: 8%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: white;
+
+  flex-shrink: 0;
+}
+
+
+/* BOLINHAS */
+
+.doc-dots {
+  display: flex;
+
+  gap: 8px;
+}
+
+.doc-dot {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #a0a0a0;
+}
+
+.doc-dot.active {
+  background: #1351b4;
+}
   </style>
 </head>
 
@@ -392,110 +557,132 @@ border: none;
 
   <!-- TELA 4 - CARROSSEL -->
 
-  <div id="screen4" class="screen">
-
-    <div id="slider" class="slider">
-
-      <div class="slide">
-        <img src="final1.jpg" alt="">
-      </div>
-
-      <div class="slide">
-        <img src="final2.jpg" alt="">
-      </div>
-
-      <div class="slide">
-        <img src="final3.jpg" alt="">
-      </div>
-
-      <div class="slide">
+  <div class="document-slide">
         <img src="final4.jpg" alt="">
       </div>
 
     </div>
 
-    <div class="dots">
-      <div class="dot active"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
+    <!-- PARTE DE BAIXO FICA PARADA -->
+    <div class="doc-bottom">
+
+      <div class="doc-dots">
+        <span class="doc-dot active"></span>
+        <span class="doc-dot"></span>
+        <span class="doc-dot"></span>
+        <span class="doc-dot"></span>
+      </div>
+
     </div>
 
   </div>
 
+</div>
 
   <script>
-    /*
-      APÓS 3 SEGUNDOS,
-      SAI DO LOADING
-    */
+<script>
 
-    setTimeout(function () {
+  /* =========================
+     TROCAR DE TELA
+  ========================= */
+
+  function goToScreen(number) {
+
+    document.querySelectorAll(".screen").forEach(function(screen) {
+      screen.classList.remove("active");
+    });
+
+    const nextScreen =
+      document.getElementById("screen" + number);
+
+    if (nextScreen) {
+      nextScreen.classList.add("active");
+    }
+
+    /* Quando entrar na Tela 4,
+       começa sempre no primeiro documento */
+    if (number === 4) {
+
+      const documentSlider =
+        document.getElementById("documentSlider");
+
+      if (documentSlider) {
+        documentSlider.scrollLeft = 0;
+      }
+
+      updateDocumentDots(0);
+    }
+  }
+
+
+  /* =========================
+     LOADING - 6 SEGUNDOS
+  ========================= */
+
+  function startApp() {
+
+    goToScreen(1);
+
+    setTimeout(function() {
       goToScreen(2);
     }, 6000);
 
+  }
 
-    /*
-      TROCA DE TELA
-    */
+  window.addEventListener("load", startApp);
 
-    function goToScreen(number) {
-      const screens =
-        document.querySelectorAll(".screen");
 
-      screens.forEach(function (screen) {
-        screen.classList.remove("active");
-      });
+  /* =========================
+     CARROSSEL DA TELA 4
+  ========================= */
 
-      const next =
-        document.getElementById("screen" + number);
+  const documentSlider =
+    document.getElementById("documentSlider");
 
-      next.classList.add("active");
 
-      if (number === 4) {
-        const slider =
-          document.getElementById("slider");
+  if (documentSlider) {
 
-        slider.scrollLeft = 0;
+    documentSlider.addEventListener(
+      "scroll",
+      function() {
 
-        updateDots(0);
+        const pageWidth =
+          documentSlider.clientWidth;
+
+        const page =
+          Math.round(
+            documentSlider.scrollLeft /
+            pageWidth
+          );
+
+        updateDocumentDots(page);
+
       }
-    }
+    );
+
+  }
 
 
-    /*
-      CARROSSEL
-    */
+  /* =========================
+     ATUALIZAR AS BOLINHAS
+  ========================= */
 
-    const slider =
-      document.getElementById("slider");
+  function updateDocumentDots(index) {
 
     const dots =
-      document.querySelectorAll(".dot");
+      document.querySelectorAll(".doc-dot");
 
-
-    slider.addEventListener("scroll", function () {
-      const slideWidth =
-        slider.clientWidth;
-
-      const currentSlide =
-        Math.round(
-          slider.scrollLeft / slideWidth
-        );
-
-      updateDots(currentSlide);
+    dots.forEach(function(dot) {
+      dot.classList.remove("active");
     });
 
-
-    function updateDots(index) {
-      dots.forEach(function (dot) {
-        dot.classList.remove("active");
-      });
-
-      if (dots[index]) {
-        dots[index].classList.add("active");
-      }
+    if (dots[index]) {
+      dots[index].classList.add("active");
     }
+
+  }
+
+</script>
   </script>
 
 </body>
