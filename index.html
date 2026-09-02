@@ -500,6 +500,40 @@
 #screen1 {
   background: #FCFCFC;
 }
+/* TRANSIÇÃO PARA VOLTAR */
+
+.slide-out-right {
+  animation: slideOutRight 0.32s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.32s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  box-shadow: 4px 0 0 white;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(100%, 0, 0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translate3d(-99.5%, 0, 0);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
   </style>
 </head>
 
@@ -568,7 +602,7 @@ border: none;
 
 </div>
 
-  <!-- TELA 3 -->
+<!-- TELA 3 -->
 
 <div id="screen3" class="screen">
 
@@ -591,21 +625,38 @@ border: none;
       "
     >
 
-    <!-- BOTÃO DA TELA 3 -->
-<div
-  onclick="goToScreen(4)"
-  style="
-    position: absolute;
-    left: 6%;
-    top: 25.5%;
-    width: 88%;
-    height: 23%;
- background: transparent;
-border: none;
-    z-index: 99999;
-    cursor: pointer;
-  "
-></div>
+    <!-- CARTEIRA DE IDENTIDADE -->
+    <div
+      onclick="goToScreen(4)"
+      style="
+        position: absolute;
+        left: 6%;
+        top: 25.5%;
+        width: 88%;
+        height: 23%;
+        background: transparent;
+        border: none;
+        z-index: 99999;
+        cursor: pointer;
+      "
+    ></div>
+
+
+    <!-- SETA < PARA VOLTAR -->
+    <div
+      onclick="slideBackToScreen(3, 2)"
+      style="
+        position: absolute;
+        left: 1%;
+        top: 16%;
+        width: 11%;
+        height: 7%;
+        background: transparent;
+        border: none;
+        z-index: 99999;
+        cursor: pointer;
+      "
+    ></div>
 
   </div>
 
@@ -795,6 +846,40 @@ function slideToScreen(currentNumber, nextNumber) {
 
   }, 320);
 
+}
+function slideBackToScreen(currentNumber, previousNumber) {
+
+  const currentScreen =
+    document.getElementById("screen" + currentNumber);
+
+  const previousScreen =
+    document.getElementById("screen" + previousNumber);
+
+  if (!currentScreen || !previousScreen) return;
+
+  currentScreen.style.zIndex = "1";
+  previousScreen.style.zIndex = "2";
+
+  previousScreen.classList.add("active");
+
+  currentScreen.classList.add("slide-out-right");
+  previousScreen.classList.add("slide-in-left");
+
+  setTimeout(function() {
+
+    currentScreen.classList.remove(
+      "active",
+      "slide-out-right"
+    );
+
+    previousScreen.classList.remove(
+      "slide-in-left"
+    );
+
+    currentScreen.style.zIndex = "";
+    previousScreen.style.zIndex = "";
+
+  }, 320);
 }
 </script>
 
