@@ -127,12 +127,44 @@
       AJUSTE ESTES VALORES DEPOIS,
       se necessário.
     */
-    #button-screen2 {
-      left: 62%;
-      top: 90%;
-      width: 14%;
-      height: 8%;
-    }
+   #screen2 {
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+#screen2.active {
+  display: flex;
+}
+
+.phone-screen {
+  position: relative;
+
+  width: min(100vw, calc(100dvh * 0.461));
+  height: min(100dvh, calc(100vw / 0.461));
+}
+
+.phone-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+#button-screen2 {
+  position: absolute;
+
+  left: 63%;
+  top: 89%;
+
+  width: 16%;
+  height: 8%;
+
+  background: transparent;
+  border: none;
+
+  z-index: 20;
+}
 
     /*
       TELA 3
@@ -261,10 +293,9 @@
 
   <!-- TELA 2 -->
 
-  <div id="screen2" class="screen">
-    <img
+ <img
       src="tela2.jpg"
-      class="background-image"
+      class="phone-image"
       alt=""
     >
 
@@ -272,9 +303,12 @@
       id="button-screen2"
       class="click-area"
       onclick="goToScreen(3)"
-      aria-label="Continuar"
+      aria-label="Carteira"
     ></button>
+
   </div>
+
+</div>
 
 
   <!-- TELA 3 -->
