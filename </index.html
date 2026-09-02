@@ -450,6 +450,35 @@
 .doc-dot.active {
   background: #1351b4;
 }
+    /* TRANSIÇÃO ENTRE TELAS */
+
+.slide-out-left {
+  animation: slideOutLeft 0.35s ease-in-out forwards;
+}
+
+.slide-in-right {
+  animation: slideInRight 0.35s ease-in-out forwards;
+}
+
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
   </style>
 </head>
 
@@ -500,7 +529,7 @@
 
     <!-- BOTÃO CARTEIRA -->
     <button
-      onclick="goToScreen(3)"
+    onclick="slideToScreen(2, 3)"
       aria-label="Carteira"
       style="
         position: absolute;
@@ -711,7 +740,37 @@ border: none;
     }
 
   }
+function slideToScreen(currentNumber, nextNumber) {
 
+  const currentScreen =
+    document.getElementById("screen" + currentNumber);
+
+  const nextScreen =
+    document.getElementById("screen" + nextNumber);
+
+
+  /* mostra a próxima tela */
+  nextScreen.classList.add("active");
+
+  /* anima as duas */
+  currentScreen.classList.add("slide-out-left");
+  nextScreen.classList.add("slide-in-right");
+
+
+  setTimeout(function() {
+
+    currentScreen.classList.remove(
+      "active",
+      "slide-out-left"
+    );
+
+    nextScreen.classList.remove(
+      "slide-in-right"
+    );
+
+  }, 350);
+
+}
 </script>
 
 </body>
